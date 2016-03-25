@@ -12,14 +12,7 @@ class boxen::config (
   $datadir = undef,
   $envdir = undef,
   $homebrewdir = undef,
-  $logdir = undef,
-  $repodir = undef,
-  $reponame = undef,
-  $socketdir = undef,
-  $srcdir = undef,
   $login = undef,
-  $repo_url_template = undef,
-  $download_url_base = undef,
   $hiera_merge_hierarchy = undef
 ) {
   validate_string(
@@ -30,40 +23,23 @@ class boxen::config (
     $datadir,
     $envdir,
     $homebrewdir,
-    $logdir,
     $repodir,
-    $reponame,
-    $socketdir,
     $srcdir,
     $login,
     $repo_url_template,
     $download_url_base,
   )
 
-  file { [$home,
-          $srcdir,
-          $bindir,
-          $cachedir,
-          $configdir,
-          $datadir,
-          $envdir,
-          $logdir,
-          $socketdir]:
-    ensure => directory,
-    links  => follow
-  }
-
-  file { "${home}/README.md":
-    source => 'puppet:///modules/boxen/README.md'
-  }
+  # file { [ $home,
+  #         $envdir,
+  #       ]:
+  #   ensure => directory,
+  #   links  => follow
+  # }
 
   file { "${home}/env.sh":
     content => template('boxen/env.sh.erb'),
     mode    => '0755',
-  }
-
-  file { ["${envdir}/config.sh", "${envdir}/gh_creds.sh"]:
-    ensure => absent,
   }
 
   group { 'puppet':
@@ -78,5 +54,20 @@ class boxen::config (
   file { $puppet_data_dirs:
     ensure => directory,
     owner  => $::boxen_user
+  }
+
+  include boxen::security
+  include boxen::sudoers
+
+  $relative_bin_on_path_ensure = $relative_bin_on_path ? {
+    true    => present,
+    default => absent,
+  }
+
+  boxen::env_script {
+    'relative_bin_on_path':
+      ensure   => $relative_bin_on_path_ensure,
+      source   => 'puppet:///modules/boxen/relative_bin_on_path.sh',
+      priority => 'lowest' ;
   }
 }
