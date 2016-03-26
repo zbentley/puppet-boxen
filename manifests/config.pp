@@ -15,6 +15,7 @@ class boxen::config (
   $login = undef,
   $hiera_merge_hierarchy = undef
 ) {
+
   validate_string(
     $home,
     $bindir,
@@ -30,12 +31,20 @@ class boxen::config (
     $download_url_base,
   )
 
-  # file { [ $home,
-  #         $envdir,
-  #       ]:
-  #   ensure => directory,
-  #   links  => follow
-  # }
+  file { [ $home,
+           $bindir,
+          # $logdir,
+           $cachedir,
+           $configdir,
+           $datadir,
+           $envdir,
+          "${home}/puppet",
+          "${home}/puppet/var",
+          "${home}/puppet/conf",
+        ]:
+    ensure => directory,
+    links  => follow
+  }
 
   file { "${home}/env.sh":
     content => template('boxen/env.sh.erb'),

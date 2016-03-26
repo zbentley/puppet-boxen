@@ -7,5 +7,4 @@ boxen::config::datadir:     "%{::boxen_home}/data"
 boxen::config::envdir:      "%{::boxen_home}/env.d"
 boxen::config::homebrewdir: "%{::homebrew_root}"
 boxen::config::logdir:      "%{::boxen_home}/log"
-boxen::config::login:       "%{::github_login}"
 boxen::config::hiera_merge_hierarchy: false

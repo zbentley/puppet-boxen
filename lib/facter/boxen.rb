@@ -7,10 +7,6 @@ factsdir    = "#{config.homedir}/config/facts"
 dot_boxen   = "#{ENV['HOME']}/.boxen"
 user_config = "#{dot_boxen}/config.json"
 
-facts["github_login"]  = config.login
-facts["github_email"]  = config.email
-facts["github_name"]   = config.name
-
 facts["boxen_home"]    = config.homedir
 facts["boxen_user"]    = config.user
 facts["luser"]         = config.user # this is goin' away
