@@ -5,6 +5,5 @@ boxen::config::cachedir:    "%{::boxen_home}/cache"
 boxen::config::configdir:   "%{::boxen_home}/config"
 boxen::config::datadir:     "%{::boxen_home}/data"
 boxen::config::envdir:      "%{::boxen_home}/env.d"
-boxen::config::homebrewdir: "%{::homebrew_root}"
 boxen::config::logdir:      "%{::boxen_home}/log"
 boxen::config::hiera_merge_hierarchy: false

@@ -11,7 +11,6 @@ class boxen::config (
   $configdir = undef,
   $datadir = undef,
   $envdir = undef,
-  $homebrewdir = undef,
   $login = undef,
   $hiera_merge_hierarchy = undef
 ) {
@@ -23,7 +22,6 @@ class boxen::config (
     $configdir,
     $datadir,
     $envdir,
-    $homebrewdir,
     $repodir,
     $srcdir,
     $login,
@@ -39,11 +37,12 @@ class boxen::config (
            $datadir,
            $envdir,
           "${home}/puppet",
-          "${home}/puppet/var",
-          "${home}/puppet/conf",
+          "${home}/data/puppet",
+          "${home}/data/puppet/graphs",
         ]:
     ensure => directory,
-    links  => follow
+    links  => follow,
+    owner  => $::boxen_user,
   }
 
   file { "${home}/env.sh":
@@ -55,27 +54,12 @@ class boxen::config (
     ensure => present
   }
 
-  $puppet_data_dirs = [
-    "${home}/data/puppet",
-    "${home}/data/puppet/graphs"
-  ]
-
-  file { $puppet_data_dirs:
-    ensure => directory,
-    owner  => $::boxen_user
-  }
-
   include boxen::security
   include boxen::sudoers
 
-  $relative_bin_on_path_ensure = $relative_bin_on_path ? {
-    true    => present,
-    default => absent,
-  }
-
   boxen::env_script {
     'relative_bin_on_path':
-      ensure   => $relative_bin_on_path_ensure,
+      ensure   => present,
       source   => 'puppet:///modules/boxen/relative_bin_on_path.sh',
       priority => 'lowest' ;
   }
